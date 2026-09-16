@@ -59,7 +59,7 @@ def get_logic_critic(prompt: str, response_text: str) -> CriticReport:
     return report
 
 def get_completeness_critic(prompt: str, response_text: str) -> CriticReport:
-    """Evaluates question coverage using Qwen 3.6 27B."""
+    """Evaluates question coverage using GPT-OSS 20B."""
     system_prompt = (
         f"You are a Completeness Critic. Check if the response answers every part "
         f"of the prompt without omitting instructions. {BASE_DIRECTIVE}"
@@ -67,7 +67,7 @@ def get_completeness_critic(prompt: str, response_text: str) -> CriticReport:
     content = f"User Prompt:\n{prompt}\n\nLLM Response to Audit:\n{response_text}"
     
     report = groq_client.chat.completions.create(
-        model="qwen/qwen3.6-27b",
+        model="openai/gpt-oss-20b",
         response_model=CriticReport,
         max_tokens=800,
         messages=[
@@ -76,5 +76,5 @@ def get_completeness_critic(prompt: str, response_text: str) -> CriticReport:
         ]
     )
     report.dimension = EvaluationDimension.COMPLETENESS
-    report.model_name = "qwen3.6-27b (Groq)"
+    report.model_name = "gpt-oss-20b (Groq)"
     return report
